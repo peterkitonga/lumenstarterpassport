@@ -23,7 +23,9 @@ $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
 
-$app->withFacades();
+$app->withFacades(true, [
+    // Example\Support\Facades\Example::class => 'Example',
+]);
 
 $app->withEloquent();
 
@@ -63,9 +65,10 @@ $app->singleton(
 //    App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'cors' => Barryvdh\Cors\HandleCors::class,
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -79,8 +82,9 @@ $app->singleton(
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(Barryvdh\Cors\ServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
@@ -102,6 +106,8 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
 });
 
+$app->configure('cors');
+$app->configure('mail');
 $app->configure('services');
 $app->configure('filesystems');
 
