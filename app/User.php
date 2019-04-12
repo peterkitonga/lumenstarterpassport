@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
@@ -20,7 +21,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'profile_image', 'activation_code', 'is_active', 'is_logged_in', 'login_at', 'logout_at', 'email_verified_at'
+        'name', 'email', 'password', 'profile_image', 'activation_code', 'is_active', 'is_logged_in', 'login_at', 'logout_at', 'email_verified_at'
     ];
 
     /**
@@ -52,6 +53,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function activate()
     {
+        $this->email_verified_at = Carbon::now()->toDateTimeString();
         $this->activation_code = null;
         $this->is_active = 1;
         $this->save();
