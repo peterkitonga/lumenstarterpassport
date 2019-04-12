@@ -19,7 +19,7 @@ class AuthTablesSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('users')->delete();
 
-        \App\User::query()->create([
+        $admin = \App\User::query()->create([
             'name' => 'Default Admin',
             'email' => 'admin@admin.com',
             'password' => Hash::make('password'),
@@ -29,7 +29,7 @@ class AuthTablesSeeder extends Seeder
             'updated_at' => Carbon\Carbon::now()->toDateTimeString()
         ]);
 
-        \App\User::query()->create([
+        $subscriber = \App\User::query()->create([
             'name' => 'Default Subscriber',
             'email' => 'subscriber@subscriber.com',
             'password' => Hash::make('password'),
@@ -64,14 +64,14 @@ class AuthTablesSeeder extends Seeder
         DB::table('role_user')->insert([
             [
                 'role_id' => 1,
-                'user_id' => 1
+                'user_id' => $admin->id
             ]
         ]);
 
         DB::table('role_user')->insert([
             [
                 'role_id' => 2,
-                'user_id' => 2
+                'user_id' => $subscriber->id
             ]
         ]);
 
