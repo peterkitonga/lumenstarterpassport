@@ -21,6 +21,8 @@ class UserResource extends Resource
             'email' => (string) $this->email,
             'role' => (string) $this->roles[0]['slug'],
             'is_active' => (boolean) $this->is_active == 1 ? true : false,
+            'is_deactivated' => (bool) ($this->deleted_at == null ? false : true),
+            'image' => (string) $this->profile_image == null ? null : $this->profile_image,
             'is_logged_in' => (boolean) $this->is_logged_in == 1 ? true : false,
             'last_seen' => (string) Carbon::parse($this->logout_at)->format('M d, Y H:i'),
             'date_added' => (string) Carbon::parse($this->created_at)->format('M d, Y H:i'),
