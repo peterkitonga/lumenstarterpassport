@@ -6,12 +6,13 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasApiTokens;
+    use Authenticatable, Authorizable, HasApiTokens, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +20,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'activation_code', 'is_active', 'is_logged_in', 'login_at', 'logout_at', 'email_verified_at'
+        'name', 'email', 'profile_image', 'activation_code', 'is_active', 'is_logged_in', 'login_at', 'logout_at', 'email_verified_at'
     ];
 
     /**
@@ -30,6 +31,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password', 'activation_code'
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * Sets the first letter of the name attribute value to uppercase.

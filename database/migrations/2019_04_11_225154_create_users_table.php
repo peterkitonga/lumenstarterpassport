@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->string('password')->nullable();
+            $table->string('profile_image')->nullable();
             $table->string('activation_code', 64)->nullable();
             $table->boolean('is_active')->default(0);
             $table->boolean('is_logged_in')->default(0);
@@ -25,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->dateTime('logout_at')->nullable();
             $table->dateTime('email_verified_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
