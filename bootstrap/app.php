@@ -86,6 +86,8 @@ $app->routeMiddleware([
 $app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(Laravel\Passport\PassportServiceProvider::class);
+$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
@@ -106,6 +108,7 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
 });
 
+$app->configure('auth');
 $app->configure('cors');
 $app->configure('mail');
 $app->configure('services');
