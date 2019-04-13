@@ -68,6 +68,7 @@ $app->singleton(
 $app->routeMiddleware([
     'cors' => Barryvdh\Cors\HandleCors::class,
     'auth' => App\Http\Middleware\Authenticate::class,
+    'access.role' => App\Http\Middleware\AccessRole::class,
 ]);
 
 /*
