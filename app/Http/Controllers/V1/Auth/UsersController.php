@@ -25,7 +25,7 @@ class UsersController extends Controller
      */
     public function __construct()
     {
-        
+        $this->middleware('access.role:administrator');
     }
 
     /**
