@@ -3,10 +3,12 @@
 namespace App\Exceptions;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -52,24 +54,38 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof MethodNotAllowedHttpException) {
             $httpStatusCode = Response::HTTP_METHOD_NOT_ALLOWED;
-            $message = new MethodNotAllowedHttpException([], Response::$statusTexts[$httpStatusCode], $exception);
-        } elseif ($exception instanceof NotFoundHttpException) {
+            $message = Response::$statusTexts[$httpStatusCode];
+        } elseif ($exception instanceof NotFoundHttpException && $exception instanceof ModelNotFoundException) {
             $httpStatusCode = Response::HTTP_NOT_FOUND;
-            $message = new NotFoundHttpException(Response::$statusTexts[$httpStatusCode], $exception);
+            $message = Response::$statusTexts[$httpStatusCode];
         } elseif ($exception instanceof AuthorizationException) {
-            $httpStatusCode = Response::HTTP_FORBIDDEN;
-            $message = new AuthorizationException(Response::$statusTexts[$httpStatusCode], $httpStatusCode);
+            $httpStatusCode = Response::HTTP_UNAUTHORIZED;
+            $message = Response::$statusTexts[$httpStatusCode];
         } elseif ($exception instanceof \Dotenv\Exception\ValidationException && $exception->getResponse()) {
             $httpStatusCode = Response::HTTP_BAD_REQUEST;
-            $message = new \Dotenv\Exception\ValidationException(Response::$statusTexts[$httpStatusCode], $httpStatusCode, $exception);
+            $message = Response::$statusTexts[$httpStatusCode];
         } else {
             $httpStatusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
-            $message = new HttpException($httpStatusCode, Response::$statusTexts[$httpStatusCode]);
+            $message = Response::$statusTexts[$httpStatusCode];
+        }
+
+        if (Schema::connection(env('DB_CONNECTION'))->hasTable('error_logs')) {
+            DB::table('error_logs')->insert([
+                'path' => $request->path(),
+                'method' => $request->method(),
+                'request' => json_encode($request->toArray()),
+                'message' => empty($exception->getMessage()) ? $message : $exception->getMessage(),
+                'line' => $exception->getLine(),
+                'file' => $exception->getFile(),
+                'trace' => $exception->getTraceAsString(),
+                'created_at' => Carbon::now()->toDateTimeString(),
+                'updated_at' => Carbon::now()->toDateTimeString()
+            ]);
         }
 
         return response()->json([
             'status'  => 'error',
-            'message' => $message->getMessage(),
+            'message' => $message,
             'data' => $request->toArray()
         ], $httpStatusCode);
     }
