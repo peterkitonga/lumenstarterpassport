@@ -7,6 +7,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Mail\UserCredentials;
+use Illuminate\Http\Response;
 use App\Http\Resources\UserResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -49,7 +50,7 @@ class UsersController extends Controller
 
             return $response;
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -81,7 +82,7 @@ class UsersController extends Controller
                 array_push($errorResponse, $array);
             }
 
-            return response()->json(['status' => 'error', 'message' => $errorResponse], 500);
+            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try {
@@ -113,7 +114,7 @@ class UsersController extends Controller
 
             return $response;
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -135,10 +136,10 @@ class UsersController extends Controller
 
                 return $response;
             } else {
-                return response()->json(['status' => 'error', 'message' => 'User with id '.$id.' not found']);
+                return response()->json(['status' => 'error', 'message' => 'User with id '.$id.' not found', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -169,7 +170,7 @@ class UsersController extends Controller
                 array_push($errorResponse, $array);
             }
 
-            return response()->json(['status' => 'error', 'message' => $errorResponse], 500);
+            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try {
@@ -186,7 +187,7 @@ class UsersController extends Controller
 
             return $response;
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -216,7 +217,7 @@ class UsersController extends Controller
                 array_push($errorResponse, $array);
             }
 
-            return response()->json(['status' => 'error', 'message' => $errorResponse], 500);
+            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try {
@@ -235,7 +236,7 @@ class UsersController extends Controller
 
             return $response;
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -259,7 +260,7 @@ class UsersController extends Controller
 
             return $response;
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -283,7 +284,7 @@ class UsersController extends Controller
 
             return $response;
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -310,10 +311,10 @@ class UsersController extends Controller
 
                 return $response;
             } else {
-                return response()->json(['status' => 'error', 'message' => 'User with id '.$id.' not found']);
+                return response()->json(['status' => 'error', 'message' => 'User with id '.$id.' not found', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

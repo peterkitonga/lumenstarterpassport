@@ -86,7 +86,7 @@ class Handler extends ExceptionHandler
         return response()->json([
             'status'  => 'error',
             'message' => $message,
-            'data' => $request->toArray()
+            'data' => []
         ], $httpStatusCode);
     }
 }

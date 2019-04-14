@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\Request;
 use App\Mail\UserActivation;
 use App\Mail\UserResetPassword;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -84,8 +85,8 @@ class AuthsController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => json_decode((string) $exception->getResponse()->getBody()->getContents(), true)['message'],
-                'data' => ''
-            ], 500);
+                'data' => []
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -118,7 +119,7 @@ class AuthsController extends Controller
                 array_push($errorResponse, $array);
             }
 
-            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try
@@ -139,9 +140,9 @@ class AuthsController extends Controller
             $email = new UserActivation(new User(['name' => $user->name, 'activation_code' => $user->activation_code]));
             Mail::to($user->email)->send($email);
 
-            return response()->json(['status' => 'success', 'message' => 'You have successfully registered. Please click on the activation link sent to your email', 'data' => $request->toArray()]);
+            return response()->json(['status' => 'success', 'message' => 'You have successfully registered. Please click on the activation link sent to your email', 'data' => []]);
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -171,7 +172,7 @@ class AuthsController extends Controller
                 array_push($errorResponse, $array);
             }
 
-            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try {
@@ -198,29 +199,29 @@ class AuthsController extends Controller
                         return response()->json([
                             'status' => 'error',
                             'message' => 'Unauthorized. Please enter the correct password',
-                            'data' => $request->toArray()
-                        ], 500);
+                            'data' => []
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 } else {
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Please click on the activation link sent to your email during registration before proceeding',
-                        'data' => $request->toArray()
-                    ], 500);
+                        'data' => []
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             } else {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'An account associated with that email does not exist or has been deactivated',
-                    'data' => $request->toArray()
-                ], 500);
+                    'data' => []
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch(\Exception $exception) {
             return response()->json([
                 'status' => 'error',
                 'message' => $exception->getMessage(),
-                'data' => $request->toArray()
-            ], 500);
+                'data' => []
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -238,9 +239,9 @@ class AuthsController extends Controller
             // Activate the user
             $user->activate();
 
-            return response()->json(['status' => 'success', 'message' => 'Successfully activated your account. You may proceed to login', 'data' => ['code' => $code]], 200);
+            return response()->json(['status' => 'success', 'message' => 'Successfully activated your account. You may proceed to login', 'data' => []], 200);
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => ['code' => $code]], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -269,7 +270,7 @@ class AuthsController extends Controller
                 array_push($errorResponse, $array);
             }
 
-            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try {
@@ -286,12 +287,12 @@ class AuthsController extends Controller
                 $email = new UserResetPassword(new User(['name' => $user->name, 'email' => $user->email]), $token);
                 Mail::to($user->email)->send($email);
 
-                return response()->json(['status' => 'success', 'message' => 'Successfully sent you a reset password link. Please check your email', 'data' => $request->toArray()], 200);
+                return response()->json(['status' => 'success', 'message' => 'Successfully sent you a reset password link. Please check your email', 'data' => []], 200);
             } else {
-                return response()->json(['status' => 'error', 'message' => 'An account associated with that email does not exist or has been deactivated', 'data' => $request->toArray()], 500);
+                return response()->json(['status' => 'error', 'message' => 'An account associated with that email does not exist or has been deactivated', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -322,7 +323,7 @@ class AuthsController extends Controller
                 array_push($errorResponse, $array);
             }
 
-            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try {
@@ -336,15 +337,15 @@ class AuthsController extends Controller
                 if ($user) {
                     $reset->delete();
 
-                    return response()->json(['status' => 'success', 'message' => 'Successfully reset your password. You may proceed to login', 'data' => ''], 200);
+                    return response()->json(['status' => 'success', 'message' => 'Successfully reset your password. You may proceed to login', 'data' => []], 200);
                 } else {
-                    return response()->json(['status' => 'error', 'message' => 'Something went wrong. Please try again', 'data' => $request->toArray()], 500);
+                    return response()->json(['status' => 'error', 'message' => 'Something went wrong. Please try again', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             } else {
-                return response()->json(['status' => 'error', 'message' => 'Token given does not match our records', 'data' => $request->toArray()], 500);
+                return response()->json(['status' => 'error', 'message' => 'Token given does not match our records', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -366,10 +367,10 @@ class AuthsController extends Controller
 
                 return $response;
             } else {
-                return response()->json(['status' => 'error', 'message' => 'Refresh token missing', 'data' => ''], 500);
+                return response()->json(['status' => 'error', 'message' => 'Refresh token missing', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => ''], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -391,7 +392,7 @@ class AuthsController extends Controller
 
             return $response;
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => ''], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => ''], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -423,7 +424,7 @@ class AuthsController extends Controller
                 array_push($errorResponse, $array);
             }
 
-            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try {
@@ -469,7 +470,7 @@ class AuthsController extends Controller
 
             return $response;
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -500,7 +501,7 @@ class AuthsController extends Controller
                 array_push($errorResponse, $array);
             }
 
-            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $errorResponse, 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try {
@@ -520,10 +521,10 @@ class AuthsController extends Controller
 
                 return $response;
             } else {
-                return response()->json(['status' => 'error', 'message' => 'The old password you entered is incorrect', 'data' => $request->toArray()], 500);
+                return response()->json(['status' => 'error', 'message' => 'The old password you entered is incorrect', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => $request->toArray()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -546,9 +547,9 @@ class AuthsController extends Controller
             $request->user()->token()->revoke();
             $request->user()->token()->delete();
 
-            return response()->json(['status' => 'success', 'message' => 'Successfully logged out', 'data' => ''], 200);
+            return response()->json(['status' => 'success', 'message' => 'Successfully logged out', 'data' => []], 200);
         } catch(\Exception $exception) {
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => ''], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => ''], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

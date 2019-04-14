@@ -38,12 +38,11 @@ class AccessRole
     {
         // Pre-Middleware Action
         if ($this->auth->guard($guard)->guest()) {
-            return response()->json(['status' => 'error', 'message' => 'Unauthorized. Please login to continue'], 401);
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized. Please login to continue', 'data' => []], 401);
         }
 
-        if(!$this->auth->guard($guard)->user()->can($role))
-        {
-            return response()->json(['status' => 'error', 'message' => 'Forbidden. You do not have permission to perform this action'], 403);
+        if(!$this->auth->guard($guard)->user()->can($role)) {
+            return response()->json(['status' => 'error', 'message' => 'Forbidden. You do not have permission to perform this action', 'data' => []], 403);
         }
 
         // Post-Middleware Action
