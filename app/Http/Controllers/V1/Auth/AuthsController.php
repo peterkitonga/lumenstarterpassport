@@ -234,12 +234,16 @@ class AuthsController extends Controller
     public function activate($code)
     {
         try {
-            $user = User::query()->where('activation_code', '=', $code)->firstOrFail();
+            $user = User::query()->where('activation_code', '=', $code)->first();
 
-            // Activate the user
-            $user->activate();
+            if ($user) {
+                // Activate the user
+                $user->activate();
 
-            return response()->json(['status' => 'success', 'message' => 'Successfully activated your account. You may proceed to login', 'data' => []], Response::HTTP_OK);
+                return response()->json(['status' => 'success', 'message' => 'Successfully activated your account. You may proceed to login', 'data' => []], Response::HTTP_OK);
+            } else {
+                return response()->json(['status' => 'error', 'message' => 'User with the given code not found', 'data' => []], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $exception) {
             return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
