@@ -55,7 +55,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof MethodNotAllowedHttpException) {
             $httpStatusCode = Response::HTTP_METHOD_NOT_ALLOWED;
             $message = Response::$statusTexts[$httpStatusCode];
-        } elseif ($exception instanceof NotFoundHttpException && $exception instanceof ModelNotFoundException) {
+        } elseif ($exception instanceof NotFoundHttpException) {
             $httpStatusCode = Response::HTTP_NOT_FOUND;
             $message = Response::$statusTexts[$httpStatusCode];
         } elseif ($exception instanceof AuthorizationException) {
