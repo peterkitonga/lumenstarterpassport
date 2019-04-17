@@ -5,7 +5,6 @@ namespace App\Http\Controllers\V1\Auth;
 use App\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\Request;
 use App\Mail\UserActivation;
 use App\Mail\UserResetPassword;
@@ -18,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Testing\MimeType;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Exception\BadResponseException;
 
 class AuthsController extends Controller
 {
@@ -86,7 +86,7 @@ class AuthsController extends Controller
                 'status' => 'error',
                 'message' => json_decode((string) $exception->getResponse()->getBody()->getContents(), true)['message'],
                 'data' => []
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], $exception->getResponse()->getStatusCode());
         }
     }
 
@@ -293,7 +293,7 @@ class AuthsController extends Controller
 
                 return response()->json(['status' => 'success', 'message' => 'Successfully sent you a reset password link. Please check your email', 'data' => []], Response::HTTP_OK);
             } else {
-                return response()->json(['status' => 'error', 'message' => 'An account associated with that email does not exist or has been deactivated', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
+                return response()->json(['status' => 'error', 'message' => 'An account associated with that email does not exist or has been deactivated', 'data' => []], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $exception) {
             return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
