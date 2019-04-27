@@ -78,7 +78,7 @@ class UsersController extends Controller
 
             foreach ($errorKeys as $key)
             {
-                $array = [$key => $errors[$key]];
+                $array = ['field' => $key, 'error' => $errors[$key]];
                 array_push($errorResponse, $array);
             }
 
@@ -167,7 +167,7 @@ class UsersController extends Controller
 
             foreach ($errorKeys as $key)
             {
-                $array = [$key => $errors[$key]];
+                $array = ['field' => $key, 'error' => $errors[$key]];
                 array_push($errorResponse, $array);
             }
 
@@ -214,7 +214,7 @@ class UsersController extends Controller
 
             foreach ($errorKeys as $key)
             {
-                $array = [$key => $errors[$key]];
+                $array = ['field' => $key, 'error' => $errors[$key]];
                 array_push($errorResponse, $array);
             }
 
