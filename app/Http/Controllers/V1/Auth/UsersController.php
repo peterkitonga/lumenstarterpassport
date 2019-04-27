@@ -97,7 +97,7 @@ class UsersController extends Controller
                 'name' => $request->get('first_name').' '.$request->get('last_name'),
                 'email' => $request->get('email'),
                 'password' => Hash::make($password),
-                'activation_status' => 1,
+                'is_active' => 1,
                 'email_verified_at' => Carbon::now()->toDateTimeString()
             ]);
             $user->save();
@@ -202,7 +202,7 @@ class UsersController extends Controller
     public function role(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'role_select' => 'required'
+            'role_select' => 'required|not_in:0'
         ]);
 
         if ($validator->fails()) {
