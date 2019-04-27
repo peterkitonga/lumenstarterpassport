@@ -153,7 +153,8 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
             'email' => 'required|email|max:255'
         ]);
 
@@ -178,7 +179,7 @@ class UsersController extends Controller
 
             // Update the user's details
             $user->update([
-                'name' => $request->get('name'),
+                'name' => ucwords($request->get('first_name').' '.$request->get('last_name')),
                 'email' => $request->get('email')
             ]);
 
