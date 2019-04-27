@@ -66,7 +66,7 @@ class UsersController extends Controller
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'role_select' => 'required'
+            'role_select' => 'required|not_in:0'
         ]);
 
         if ($validator->fails()) {
