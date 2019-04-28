@@ -55,6 +55,22 @@ class UsersController extends Controller
     }
 
     /**
+     * Retrieve a list of available user roles
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function roles()
+    {
+        try {
+            $roles = Role::query()->select('id', 'name', 'slug', 'created_at AS date_added')->get()->toArray();
+
+            return response()->json(['status' => 'success', 'data' => $roles], Response::HTTP_OK);
+        } catch(\Exception $exception) {
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * Store a user
      *
      * @param Request $request

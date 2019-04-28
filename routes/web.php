@@ -55,6 +55,7 @@ $router->group(['prefix' => 'api/v1', 'middleware' => 'cors', 'namespace' => 'V1
         // User Routes
         $router->group(['prefix' => 'users'], function () use ($router) {
             $router->get('/',  ['uses' => 'Auth\UsersController@index']);
+            $router->get('roles', ['uses' => 'Auth\UsersController@roles']);
             $router->post('store', ['uses' => 'Auth\UsersController@store']);
             $router->get('show/{id}', ['uses' => 'Auth\UsersController@show']);
             $router->put('update/{id}', ['uses' => 'Auth\UsersController@update']);
