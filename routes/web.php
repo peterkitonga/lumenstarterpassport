@@ -59,8 +59,8 @@ $router->group(['prefix' => 'api/v1', 'middleware' => 'cors', 'namespace' => 'V1
             $router->get('show/{id}', ['uses' => 'Auth\UsersController@show']);
             $router->put('update/{id}', ['uses' => 'Auth\UsersController@update']);
             $router->put('role/update/{id}', ['uses' => 'Auth\UsersController@role']);
-            $router->put('deactivate/{id}', ['uses' => 'Auth\UsersController@deactivate']);
-            $router->put('reactivate/{id}', ['uses' => 'Auth\UsersController@reactivate']);
+            $router->get('deactivate/{id}', ['uses' => 'Auth\UsersController@deactivate']);
+            $router->get('reactivate/{id}', ['uses' => 'Auth\UsersController@reactivate']);
             $router->delete('delete/{id}', ['uses' => 'Auth\UsersController@delete']);
         });
     });
