@@ -38,13 +38,45 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         try {
+            $transforms = [
+                'name' => 'name',
+                'email' => 'email',
+                'role' => 'role',
+                'is_active' => 'is_active',
+                'date_added' => 'created_at',
+                'verified_at' => 'email_verified_at'
+            ];
+
             // Get the limit of records per page
             $limit = $request->has('limit') ? $request->get('limit') : 10;
-            $column = $request->has('sort_column') ? $request->get('sort_column') : 'created_at';
-            $direction = $request->has('sort_direction') ? $request->get('sort_direction') : 'desc';
 
-            // Get a list of user records and parse them as an array
-            $users = User::query()->withTrashed()->orderBy($column, $direction)->paginate($limit);
+            if ($request->has('sort')) {
+                $sort = json_decode(base64_decode($request->get('sort')), true);
+
+                if (array_has($transforms, $sort['column']) == false) {
+                    return response()->json(['status' => 'error', 'message' => 'The sort parameters are out of scope', 'data' => []], Response::HTTP_BAD_REQUEST);
+                }
+
+                $column = $transforms[$sort['column']];
+                $direction = $sort['direction'];
+            } else {
+                $column = 'created_at';
+                $direction = 'desc';
+            }
+
+            if ($request->has('search')) {
+                $search = json_decode(base64_decode($request->get('search')), true);
+
+                if (array_has($transforms, $search['column']) == false) {
+                    return response()->json(['status' => 'error', 'message' => 'The search parameters are out of scope', 'data' => []], Response::HTTP_BAD_REQUEST);
+                }
+
+                // Get a list of user records and parse them as an array
+                $users = User::query()->withTrashed()->where($transforms[$search['column']], 'LIKE', '%'.$search['value'].'%')->orderBy($column, $direction)->paginate($limit);
+            } else {
+                // Get a list of user records and parse them as an array
+                $users = User::query()->withTrashed()->orderBy($column, $direction)->paginate($limit);
+            }
 
             $response = new UserCollection($users);
 
