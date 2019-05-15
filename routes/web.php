@@ -39,13 +39,13 @@ $router->group(['prefix' => 'api/v1', 'middleware' => 'cors', 'namespace' => 'V1
         $router->get('activate/{code}', ['uses' => 'Auth\AuthsController@activate']);
         $router->post('email/reset/password/link', ['uses' => 'Auth\AuthsController@forgot']);
         $router->post('reset/password', ['uses' => 'Auth\AuthsController@reset']);
+        $router->post('refresh', ['uses' => 'Auth\AuthsController@refresh']);
     });
 
     /*------------------------------------------ Auth Routes -------------------------------------------*/
     $router->group(['middleware' => 'auth:api'], function() use ($router) {
         // Auth Routes
         $router->group(['prefix' => 'auth'], function () use ($router) {
-            $router->post('refresh', ['uses' => 'Auth\AuthsController@refresh']);
             $router->get('user', ['uses' => 'Auth\AuthsController@profile']);
             $router->put('user/update', ['uses' => 'Auth\AuthsController@update']);
             $router->put('user/password/update', ['uses' => 'Auth\AuthsController@password']);
