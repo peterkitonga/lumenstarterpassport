@@ -525,7 +525,7 @@ class AuthsController extends Controller
 
                 return $response;
             } else {
-                return response()->json(['status' => 'error', 'message' => 'The old password you entered is incorrect', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
+                return response()->json(['status' => 'error', 'message' => 'The current password you entered is incorrect', 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch(\Exception $exception) {
             return response()->json(['status' => 'error', 'message' => $exception->getMessage(), 'data' => []], Response::HTTP_INTERNAL_SERVER_ERROR);
