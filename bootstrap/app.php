@@ -66,7 +66,7 @@ $app->singleton(
 // ]);
 
 $app->routeMiddleware([
-    'cors' => Barryvdh\Cors\HandleCors::class,
+    'cors' => Fruitcake\Cors\HandleCors::class,
     'auth' => App\Http\Middleware\Authenticate::class,
     'access.role' => App\Http\Middleware\AccessRole::class,
 ]);
@@ -84,8 +84,8 @@ $app->routeMiddleware([
 
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
-$app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Fruitcake\Cors\CorsServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
