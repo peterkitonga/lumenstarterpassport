@@ -61,12 +61,11 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//    App\Http\Middleware\ExampleMiddleware::class
-// ]);
+ $app->middleware([
+     Fruitcake\Cors\HandleCors::class,
+ ]);
 
 $app->routeMiddleware([
-    'cors' => Fruitcake\Cors\HandleCors::class,
     'auth' => App\Http\Middleware\Authenticate::class,
     'access.role' => App\Http\Middleware\AccessRole::class,
 ]);

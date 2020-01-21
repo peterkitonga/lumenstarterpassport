@@ -31,7 +31,7 @@ $router->group(['prefix' => 'mail'], function () use ($router) {
 });
 
 /*------------------------------------------ Api Version 1 Routes -------------------------------------------*/
-$router->group(['prefix' => 'api/v1', 'middleware' => 'cors', 'namespace' => 'V1'], function () use ($router) {
+$router->group(['prefix' => 'api/v1', 'namespace' => 'V1'], function () use ($router) {
     /*------------------------------------------ Guest Routes -------------------------------------------*/
     $router->group(['prefix' => 'auth'], function () use ($router) {
         $router->post('login', ['uses' => 'Auth\AuthsController@login']);
