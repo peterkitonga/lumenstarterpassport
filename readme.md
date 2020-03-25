@@ -33,6 +33,8 @@ Below are the frameworks and dependencies used to code the project.
     1. create a directory named `public` under `/pathtoproject/storage/app/`
     2. create symbolic link to `/pathtoproject/public/storage` e.g.
     ```ln -s /var/www/php/lumenstarterpassport/storage/app/public/ /var/www/php/lumenstarterpassport/public/storage```
+    3. add permissions `sudo chown -R :www-data storage/app/`
+* Make sure to update the `APP_URL` env variable to the url of this lumen application.    
 * In case you have a front end, don't forget to update the `WEB_CLIENT_URL` env variable to the URL of your front end
 * Run application `php artisan serve`
 
